@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """
 Created on Sun Aug 13 18:50:34 2023
 
@@ -16,14 +18,12 @@ Created on Sun Aug 13 18:50:34 2023
 
 
  """
-    
 
 
-
-import pygame, sys
+import pygame
+import sys
 import math
 from pygame.locals import *
-
 
 # Enter desired tempo here in BPM. This is quarter notes, each button is a sixteenth note
 tempo = 160
@@ -112,7 +112,7 @@ for i in range(1,17):
 
 
 ''' 
-    playNotes
+    play_notes()
 
     Input: current beat to be played
 
@@ -120,16 +120,16 @@ for i in range(1,17):
     activated for the current beat
 '''
 
-def playNotes(currentBeat):
-    if hats[currentBeat].getstate():
+def play_notes(current_beat):
+    if hats[current_beat].getstate():
         hatsound = pygame.mixer.Sound('hat.mp3')
         hatsound.set_volume(0.4)
         pygame.mixer.Channel(7).play(hatsound)
-    if snares[currentBeat].getstate():
+    if snares[current_beat].getstate():
         snaresound = pygame.mixer.Sound('snare.mp3')
         snaresound.set_volume(0.4)
         pygame.mixer.Channel(6).play(snaresound)
-    if kicks[currentBeat].getstate():
+    if kicks[current_beat].getstate():
         kicksound = pygame.mixer.Sound('kick.mp3')
         kicksound.set_volume(0.4)
         pygame.mixer.Channel(5).play(kicksound)
@@ -153,7 +153,7 @@ pygame.display.update()
 
 
 '''
-    getClickedButtonTypeAndIndex
+    get_clicked_button()
 
     Input: current x and y mouse position
 
@@ -161,7 +161,7 @@ pygame.display.update()
         or kick array as a tuple
 '''
 
-def getClickedButtonTypeAndIndex(xpos, ypos):
+def get_clicked_button(xpos, ypos):
 
     index = (xpos - 105)/50
     index = math.ceil(index)
@@ -178,14 +178,14 @@ def getClickedButtonTypeAndIndex(xpos, ypos):
     return (type,index-1)
 
 '''
-    getCenterFromTypeAndIndex
+    get_center()
 
     Input: type of sound (row of buttons) and index within that row
 
     Output: (x,y) tuple coordinates of the center of corresponding button
 '''
 
-def getCenterFromTypeAndIndex(type, index):
+def get_center(type, index):
     xval = (index*50) + 125
 
     if type == "hat":
@@ -202,7 +202,7 @@ def getCenterFromTypeAndIndex(type, index):
 
 
 '''
-    visualToggle
+    visual_toggle()
 
     Input: button row and input in that row
 
@@ -210,8 +210,8 @@ def getCenterFromTypeAndIndex(type, index):
         If activated: solid blue circle
         If not activated: blue circle outline
 '''
-def visualToggle(array, index):
-    center = getCenterFromTypeAndIndex(array[0].gettype(),index)
+def visual_toggle(array, index):
+    center = get_center(array[0].gettype(),index)
     if array[index].getstate(): ## is activated
         pygame.draw.circle(display, white, center, 20)
         pygame.draw.circle(display,blue,center,20,2)
@@ -232,19 +232,19 @@ while True:
         # Detect mouse click, toggle correct button
         if event.type == pygame.MOUSEBUTTONDOWN:
             current_pos = pygame.mouse.get_pos()
-            typeAndIndex = (getClickedButtonTypeAndIndex(current_pos[0],current_pos[1]))
-            if typeAndIndex != None:
-                if typeAndIndex[0] == "hat":
-                    visualToggle(hats,typeAndIndex[1])
-                    hats[typeAndIndex[1]].toggle()
+            type_and_index = (get_clicked_button(current_pos[0],current_pos[1]))
+            if type_and_index != None:
+                if type_and_index[0] == "hat":
+                    visual_toggle(hats,type_and_index[1])
+                    hats[type_and_index[1]].toggle()
 
-                if typeAndIndex[0] == "snare":
-                    visualToggle(snares,typeAndIndex[1])
-                    snares[typeAndIndex[1]].toggle()
+                if type_and_index[0] == "snare":
+                    visual_toggle(snares,type_and_index[1])
+                    snares[type_and_index[1]].toggle()
 
-                if typeAndIndex[0] == "kick":
-                    visualToggle(kicks,typeAndIndex[1])
-                    kicks[typeAndIndex[1]].toggle()
+                if type_and_index[0] == "kick":
+                    visual_toggle(kicks,type_and_index[1])
+                    kicks[type_and_index[1]].toggle()
                     
 
         
@@ -265,7 +265,7 @@ while True:
                             if event.key == pygame.K_z:
                                 broken = True
                                 break
-                    playNotes(beat_index)
+                    play_notes(beat_index)
                     pygame.time.delay(tempo)
                     markersurface.fill(white)
                     if beats[beat_index] != 16:
